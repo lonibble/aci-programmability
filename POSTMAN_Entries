@@ -1,0 +1,16 @@
+POST URL: https://apic1.dcloud.cisco.com/api/node/mo/.xml
+<polUni>
+<vmmProvP vendor="VMware">
+<!-- VMM Domain -->
+<vmmDomP name="My-vCenter">
+<!-- Association to VLAN Namespace -->
+<infraRsVlanNs tDn="uni/infra/vlanns-[dCloud_VLAN_Pool]-dynamic"/>
+<!-- Credentials for vCenter -->
+<vmmUsrAccP name="defaultAccP" usr="administrator@vsphere.local" pwd="C1sco12345!" />
+<!-- vCenter IP address -->
+<vmmCtrlrP name="dCloud-DC" hostOrIp="198.18.133.30" rootContName="dCloud-DC">
+<vmmRsAcc tDn="uni/vmmp-VMware/dom-productionDC/usracc-defaultAccP"/>
+</vmmCtrlrP>
+</vmmDomP>
+</vmmProvP>
+</polUni>
