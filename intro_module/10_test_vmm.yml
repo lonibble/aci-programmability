@@ -70,9 +70,9 @@
                 }
             ,"vmmCtrlrP": {
              "-name": "dCloud-DC"
-             ,"-hostOrIp": "198.18.133.30"
-             ,"-rootContName": "dCloud-DC"
-             ,"-vmmRsAcc": { "-tDn": "uni/vmmp-VMware/dom-vCenter/usracc-defaultAccP" }
+             "-hostOrIp": "198.18.133.30"
+             "-rootContName": "dCloud-DC"
+             "-vmmRsAcc": { "-tDn": "uni/vmmp-VMware/dom-vCenter/usracc-defaultAccP" }
              }
           }
         }
