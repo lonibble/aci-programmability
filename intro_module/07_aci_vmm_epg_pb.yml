@@ -1,80 +1,66 @@
----
-- name: ENSURE APPLICATION CONFIGURATION EXISTS
-  hosts: apic
+--- 
+- 
   connection: local
-  gather_facts: False
-  vars_prompt:
-    - name: "tenant"
+  gather_facts: false
+  hosts: apic
+  name: "ENSURE APPLICATION CONFIGURATION EXISTS"
+  tasks: 
+    - 
+      aci_domain: 
+        domain: MyvCenter
+        domain_type: vmm
+        host: "{{ ansible_host }}"
+        password: "{{ password }}"
+        state: present
+        username: "{{ username }}"
+        validate_certs: false
+        vm_provider: vmware
+      name: "Add a new vmm domain"
+    - 
+      aci_epg_to_domain: 
+        ap: intranet
+        domain: MyvCenter
+        domain_type: vmm
+        epg: web
+        host: "{{ ansible_host }}"
+        password: "{{ password }}"
+        state: present
+        tenant: SIRIUS
+        username: "{{ username }}"
+        validate_certs: false
+        vm_provider: vmware
+      name: "Add a domain to EPG binding (vmm)"
+    - 
+      aci_rest: 
+        content: 
+          vmmProvP: 
+            ? "-vendor"
+            : VMware
+            vmmDomP: 
+              ? "-accessMode"
+              : read-write
+              ? "-name"
+              : MyvCenter
+              infraRsVlanNs: 
+                ? "-tDn"
+                : "uni/infra/vlanns-[dCloud_VLAN_Pool]-dynamic"
+              vmmUsrAccP: 
+                ? "-name"
+                : defaultAccP
+                ? "-pwd"
+                : "'C1sco12345!'"
+                ? "-usr"
+                : administrator@vsphere.local
+        host: "{{ ansible_host }}"
+        method: post
+        password: "{{ password }}"
+        path: /api/node/mo/.json
+        username: "{{ username }}"
+        validate_certs: false
+      delegate_to: localhost
+      name: "Add credentials to VMM"
+  vars_prompt: 
+    - 
+      name: tenant
+      private: false
       prompt: "What would you like to name your Tenant?"
-      private: no
-
-  tasks:
-  - name: Add a new vmm domain
-    aci_domain:
-       host: "{{ ansible_host }}"
-       username: "{{ username }}"
-       password: "{{ password }}"
-       validate_certs: no
-       domain: "MyvCenter"
-       domain_type: "vmm"
-       vm_provider: "vmware"
-       state: "present"
-#  - name: Add AEP to vmm domain binding
-#    aci_aep_to_domain:
-#       host: "{{ ansible_host }}"
-#       username: "{{ username }}"
-#       password: "{{ password }}"
-#       validate_certs: no
-#       aep: "intranet"
-#       domain: "vCenter"
-#      domain_type: "vmm"
-#       vm_provider: "vmware"
-#       state: "present"
-  - name: Add a domain to EPG binding (vmm)
-    aci_epg_to_domain:
-      host: "{{ ansible_host }}"
-      username: "{{ username }}"
-      password: "{{ password }}"
-      validate_certs: no
-      tenant: "SIRIUS"
-      ap: "intranet"
-      epg: "web"
-      domain: "MyvCenter"
-      domain_type: "vmm"
-      vm_provider: "vmware"
-      state: "present"
-  - name: Add credentials to VMM
-    aci_rest:
-      host: "{{ ansible_host }}"
-      username: "{{ username }}"
-      password: "{{ password }}"
-      validate_certs: no
-      path: /api/node/mo/.json
-      method: post
-      content:
-       {
-       "vmmProvP":
-          {
-          "-vendor": "VMware",
-          "vmmDomP":
-             {
-             "-name": "MyvCenter",
-             "-accessMode": "read-write",
-             "infraRsVlanNs": {
-               "-tDn": "uni/infra/vlanns-[dCloud_VLAN_Pool]-dynamic" 
-              },
-             "vmmUsrAccP": {
-                "-name": "defaultAccP",
-                "-usr": "administrator@vsphere.local",
-                "-pwd": "'C1sco12345!'"
-                }
-            ,"vmmCtrlrP": {
-             "-name": "dCloud-DC"
-             "-hostOrIp": "198.18.133.30"
-             "-rootContName": "dCloud-DC"
-             "-vmmRsAcc": { "-tDn": "uni/vmmp-VMware/dom-vCenter/usracc-defaultAccP" }
-             }
-          }
-        }
-    }
-    delegate_to: localhost
