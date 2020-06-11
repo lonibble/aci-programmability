@@ -5,7 +5,7 @@
   gather_facts: False
 
   tasks:
-    - name: TASK 01 - ENSURE APPLICATIONS TENANT EXISTS
+    - name: TASK 01 - ENSURE APPLICATIONS TENANT {{ tenant }} EXISTS
       aci_tenant:
         host: "{{ inventory_hostname }}"
         username: "{{ username }}"
@@ -16,7 +16,7 @@
         descr: "Tenant Created Using Ansible"
       tags: tenant, vrf, bd, filter, contract, app, epg
 
-    - name: TASK 02 - ENSURE TENANT VRF EXISTS
+    - name: TASK 02 - ENSURE TENANT VRF {{ vrf }} EXISTS
       aci_vrf:
         host: "{{ inventory_hostname }}"
         username: "{{ username }}"
@@ -85,7 +85,7 @@
       with_items: "{{ filters }}"
       tags: filter, contract
 
-    - name: TASK 07 - ENSURE TENANT CONTRACTS EXIST
+    - name: TASK 07 - ENSURE TENANT CONTRACTS {{ contracts }} EXIST
       aci_contract:
         host: "{{ inventory_hostname }}"
         username: "{{ username }}"
@@ -126,7 +126,7 @@
       with_items: "{{ contracts }}"
       tags: contract
 
-    - name: TASK 10 - ENSURE APPLICATION EXISTS
+    - name: TASK 10 - ENSURE APPLICATION {{ ap }} EXISTS
       aci_ap:
         host: "{{ inventory_hostname }}"
         username: "{{ username }}"
