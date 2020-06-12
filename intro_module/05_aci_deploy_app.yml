@@ -3,6 +3,8 @@
   hosts: apic
   connection: local
   gather_facts: False
+  vars_files:
+    - ./vars/intranet_vars_full_config.yml
 
   tasks:
     - name: TASK 01 - ENSURE APPLICATIONS TENANT {{ tenant }} EXISTS
